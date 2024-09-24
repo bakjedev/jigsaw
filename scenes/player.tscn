@@ -1,0 +1,98 @@
+[gd_scene load_steps=17 format=3 uid="uid://c8f0hqh2ampuu"]
+
+[ext_resource type="Script" path="res://scripts/player.gd" id="1_730pr"]
+[ext_resource type="PackedScene" uid="uid://dbg7yhbcbk700" path="res://scenes/weapon.tscn" id="2_mbfij"]
+[ext_resource type="Resource" uid="uid://jcdl52y83b1t" path="res://scripts/testresource.tres" id="3_jxd8a"]
+[ext_resource type="Script" path="res://scripts/state_machine.gd" id="6_k7igf"]
+[ext_resource type="Script" path="res://scripts/SprintingPlayerState.gd" id="7_2txvi"]
+[ext_resource type="Script" path="res://scripts/IdlePlayerState.gd" id="7_o6nit"]
+[ext_resource type="Theme" uid="uid://e3olasapw4de" path="res://assets/ui/debugtheme.tres" id="7_wflvj"]
+[ext_resource type="Script" path="res://scripts/WalkingPlayerState.gd" id="8_5klaj"]
+[ext_resource type="Script" path="res://scripts/debug.gd" id="8_pew1u"]
+[ext_resource type="Script" path="res://scripts/JumpingPlayerState.gd" id="8_q0qds"]
+[ext_resource type="Script" path="res://scripts/FallingPlayerState.gd" id="9_7au77"]
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_710sh"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_6vqvq"]
+
+[sub_resource type="Gradient" id="Gradient_15anr"]
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_jr7q5"]
+noise_type = 3
+frequency = 0.369
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_skfc7"]
+width = 32
+height = 32
+normalize = false
+color_ramp = SubResource("Gradient_15anr")
+noise = SubResource("FastNoiseLite_jr7q5")
+
+[node name="Player" type="CharacterBody3D" node_paths=PackedStringArray("WEAPON_CONTROLLER")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0)
+script = ExtResource("1_730pr")
+WEAPON_CONTROLLER = NodePath("Head/Camera3D/Weapon")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+cast_shadow = 3
+mesh = SubResource("CapsuleMesh_710sh")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("CapsuleShape3D_6vqvq")
+
+[node name="Head" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8, 0)
+
+[node name="Camera3D" type="Camera3D" parent="Head"]
+fov = 82.7
+far = 1000.0
+
+[node name="Weapon" parent="Head/Camera3D" node_paths=PackedStringArray("player") instance=ExtResource("2_mbfij")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, -0.4, -1.1)
+WEAPON_TYPE = ExtResource("3_jxd8a")
+sway_noise = SubResource("NoiseTexture2D_skfc7")
+reset = true
+player = NodePath("../../..")
+
+[node name="PlayerStateMachine" type="Node" parent="." node_paths=PackedStringArray("CURRENT_STATE")]
+script = ExtResource("6_k7igf")
+CURRENT_STATE = NodePath("IdlePlayerState")
+
+[node name="IdlePlayerState" type="Node" parent="PlayerStateMachine"]
+script = ExtResource("7_o6nit")
+
+[node name="WalkingPlayerState" type="Node" parent="PlayerStateMachine"]
+script = ExtResource("8_5klaj")
+
+[node name="SprintingPlayerState" type="Node" parent="PlayerStateMachine"]
+script = ExtResource("7_2txvi")
+
+[node name="JumpingPlayerState" type="Node" parent="PlayerStateMachine"]
+script = ExtResource("8_q0qds")
+
+[node name="FallingPlayerState" type="Node" parent="PlayerStateMachine"]
+script = ExtResource("9_7au77")
+
+[node name="Control" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="DebugPanel" type="PanelContainer" parent="Control"]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 0
+offset_left = 10.0
+offset_top = 10.0
+offset_right = 210.0
+offset_bottom = 50.0
+theme = ExtResource("7_wflvj")
+script = ExtResource("8_pew1u")
+
+[node name="MarginContainer" type="MarginContainer" parent="Control/DebugPanel"]
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Control/DebugPanel/MarginContainer"]
+unique_name_in_owner = true
+layout_mode = 2

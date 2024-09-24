@@ -1,0 +1,57 @@
+[gd_scene load_steps=9 format=3 uid="uid://cs3a8jueokodm"]
+
+[ext_resource type="Texture2D" uid="uid://ci570iy7bicua" path="res://addons/kenney_prototype_textures/orange/texture_08.png" id="1_5u84x"]
+[ext_resource type="PackedScene" uid="uid://c8f0hqh2ampuu" path="res://scenes/player.tscn" id="1_vlo1x"]
+[ext_resource type="Texture2D" uid="uid://dsddl0gyejeal" path="res://addons/kenney_prototype_textures/purple/texture_08.png" id="2_w3yte"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_uqpon"]
+sky_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
+ground_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
+
+[sub_resource type="Sky" id="Sky_4nvul"]
+sky_material = SubResource("ProceduralSkyMaterial_uqpon")
+
+[sub_resource type="Environment" id="Environment_ejc73"]
+background_mode = 2
+sky = SubResource("Sky_4nvul")
+tonemap_mode = 2
+sdfgi_enabled = true
+glow_enabled = true
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_lwkjb"]
+albedo_texture = ExtResource("1_5u84x")
+uv1_triplanar = true
+uv1_world_triplanar = true
+uv2_triplanar = true
+uv2_world_triplanar = true
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_avl6v"]
+albedo_texture = ExtResource("2_w3yte")
+uv1_triplanar = true
+uv1_world_triplanar = true
+uv2_triplanar = true
+uv2_world_triplanar = true
+
+[node name="Root" type="Node3D"]
+
+[node name="env" type="Node3D" parent="."]
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="env"]
+transform = Transform3D(-0.866025, -0.433013, 0.25, 0, 0.5, 0.866025, -0.5, 0.75, -0.433013, 0, 0, 0)
+shadow_enabled = true
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="env"]
+environment = SubResource("Environment_ejc73")
+
+[node name="Floor" type="CSGBox3D" parent="."]
+use_collision = true
+size = Vector3(50, 1, 50)
+material = SubResource("StandardMaterial3D_lwkjb")
+
+[node name="Floor2" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10, 2.5, 0)
+use_collision = true
+size = Vector3(10, 4, 10)
+material = SubResource("StandardMaterial3D_avl6v")
+
+[node name="Player" parent="." instance=ExtResource("1_vlo1x")]

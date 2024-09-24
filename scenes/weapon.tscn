@@ -1,0 +1,9 @@
+[gd_scene load_steps=2 format=3 uid="uid://dbg7yhbcbk700"]
+
+[ext_resource type="Script" path="res://scripts/weapon.gd" id="1_kqad7"]
+
+[node name="Weapon" type="Node3D"]
+script = ExtResource("1_kqad7")
+
+[node name="Mesh" type="MeshInstance3D" parent="."]
+cast_shadow = 0

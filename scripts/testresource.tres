@@ -1,0 +1,23 @@
+[gd_resource type="Resource" script_class="Weapons" load_steps=3 format=3 uid="uid://jcdl52y83b1t"]
+
+[ext_resource type="Script" path="res://scripts/weapons.gd" id="1_v3uu2"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_bb5ul"]
+size = Vector3(0.04, 0.04, 1)
+
+[resource]
+script = ExtResource("1_v3uu2")
+name = &"Stick"
+position = Vector3(0.5, -0.4, -1.1)
+rotation = Vector3(0, 0, 0)
+scale = Vector3(1, 1, 1)
+mesh = SubResource("BoxMesh_bb5ul")
+sway_min = Vector2(-20, -20)
+sway_max = Vector2(20, 20)
+sway_speed_position = 0.07
+sway_speed_rotation = 0.1
+sway_amount_position = 0.1
+sway_amount_rotation = 30.0
+idle_sway_adjustment = 10.0
+idle_sway_rotation_strength = 300.0
+random_sway_amount = 5.0
